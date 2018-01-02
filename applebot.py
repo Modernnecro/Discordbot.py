@@ -75,7 +75,7 @@ async def on_member_leave(member):
     await channel.send(f'{member.name} just left. He will be missed.')
 
 #ensures the command only works for the owner.
-@commands.check(bot.is_owner())
+@commands.is_owner()
 @bot.command(aliases=['stop', 'shutdown', 'bedtime'])
 async def die(ctx):
     await ctx.bot.logout()
