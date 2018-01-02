@@ -11,7 +11,7 @@ import discord.utils as utils
 
 logging.basicConfig(level='INFO')
 
-bot = commands.Bot(command_prefix='-')
+bot = commands.Bot(command_prefix='-', owner_id=182905629516496897)
 
 response = requests.get('https://status.discordapp.com/api/v2/summary.json')
 data = response.json()
@@ -73,6 +73,12 @@ async def on_member_leave(member):
     guild = member.guild
     channel = get_general(guild)
     await channel.send(f'{member.name} just left. He will be missed.')
+
+#ensures the command only works for the owner.
+@commands.check(bot.is_owner())
+@bot.command(aliases=['stop', 'shutdown', 'bedtime'])
+async def die(ctx):
+    await ctx.bot.logout()
 
 with open('token.txt') as fp:
     token = fp.read().strip()
