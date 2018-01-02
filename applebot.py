@@ -57,9 +57,8 @@ async def on_message(message):
     # To access global scope, we don't have to add the global line.
     # Yeah... still haven't quite sussed the point of that one xD
     is_on_timeout = timeout_buckets > 0
-    is_permitted = random.random() < 0.25
 
-    if is_hello and is_permitted and not is_on_timeout:    
+    if is_hello and not is_on_timeout:    
         await message.channel.send('Hiya!')
         add_bucket()
 
