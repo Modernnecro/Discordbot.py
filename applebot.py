@@ -77,7 +77,7 @@ async def on_member_join(member):
     await channel.send(f'Welcome to {guild.name}, {member.name}!, please read the rules first.')
 
 @bot.listen()
-async def on_member_leave(member):
+async def on_member_remove(member):
     print('Hello darkness my old friend.')
     guild = member.guild
     channel = get_general(guild)
