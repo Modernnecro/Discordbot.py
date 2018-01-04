@@ -16,6 +16,10 @@ bot = commands.Bot(command_prefix='-', owner_id=182905629516496897)
 response = requests.get('https://status.discordapp.com/api/v2/summary.json')
 data = response.json()
 
+responses = ['Hiya!', 'Howdy', 'Howcha doin?']
+
+triggers = ['hello', 'hi', 'hiya', 'waves']
+
 timeout_buckets = 0
 def add_bucket():
     # Have to do this to be allowed to mutate it
@@ -52,14 +56,18 @@ async def talk(ctx, *, msg):
 
 @bot.listen()
 async def on_message(message):
+    cont = message.content
+    lcont = cont.lower()
+
     # random.random() returns a number in the range [0, 1].
-    is_hello = message.content.lower().startswith('hello')
+    is_hello = any(message.content.lower().startswith(t) for t in triggers)
     # To access global scope, we don't have to add the global line.
     # Yeah... still haven't quite sussed the point of that one xD
     is_on_timeout = timeout_buckets > 0
 
     if is_hello and not is_on_timeout:    
-        await message.channel.send('Hiya!')
+        response = random.choice(responses)
+        await message.channel.send(response)
         add_bucket()
 
 @bot.listen()
@@ -70,9 +78,16 @@ async def on_member_join(member):
 
 @bot.listen()
 async def on_member_leave(member):
+    print('Hello darkness my old friend.')
     guild = member.guild
     channel = get_general(guild)
     await channel.send(f'{member.name} just left. He will be missed.')
+
+@bot.listen()
+async def on_member_ban(guild, user):
+    channel = get_general(guild)
+    await channel.send(f'{user} just got banned from the {guild}.')
+
 
 #ensures the command only works for the owner.
 @commands.is_owner()
