@@ -72,7 +72,7 @@ async def on_message(message):
 
 @bot.listen()
 async def on_member_join(member):
-    if not membeer.bot:
+    if not member.bot:
         guild = member.guild
         channel = get_general(guild)
         await channel.send(f'Welcome to {guild.name}, {member.name}!, please read the rules first.')
