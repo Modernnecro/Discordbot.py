@@ -16,9 +16,8 @@ bot = commands.Bot(command_prefix='-', owner_id=182905629516496897)
 response = requests.get('https://status.discordapp.com/api/v2/summary.json')
 data = response.json()
 
-responses = ['Hiya!', 'Howdy', 'Howcha doin?']
-
-triggers = ['hello', 'hi', 'hiya',  'waves']
+responses = ['Hiya!', 'Howdy', 'Howcha doin?', 'Come again?']
+triggers = ['Hello', 'Hi', 'Hiya', ':ausWave:', 'Goodmorning']
 
 timeout_buckets = 0
 def add_bucket():
@@ -56,40 +55,39 @@ async def talk(ctx, *, msg):
 
 @bot.listen()
 async def on_message(message):
+    if bot.user == message.author:
+        return
+
     cont = message.content
     lcont = cont.lower()
 
     # random.random() returns a number in the range [0, 1].
-    is_hello = any(message.content.lower().startswith(t) for t in triggers)
+    is_hello = message.content.lower().startswith('hello')
     # To access global scope, we don't have to add the global line.
     # Yeah... still haven't quite sussed the point of that one xD
     is_on_timeout = timeout_buckets > 0
 
-    if is_hello and not is_on_timeout:    
-        response = random.choice(responses)
-        await message.channel.send(response)
+  if is_hello and not is_on_timeout:    
+        await message.channel.send('Hiya!')
         add_bucket()
 
 @bot.listen()
 async def on_member_join(member):
-    if not membeer.bot:
-        guild = member.guild
-        channel = get_general(guild)
-        await channel.send(f'Welcome to {guild.name}, {member.name}!, please read the rules first.')
+    guild = member.guild
+    channel = get_general(guild)
+    await channel.send(f'Welcome to {guild.name}, {member.name}!, please read the rules first.')
 
 @bot.listen()
-async def on_member_remove(member):
-    if not member.bot:
-        print('Hello darkness my old friend.')
-        guild = member.guild
-        channel = get_general(guild)
-        await channel.send(f'{member.name} just left. He will be missed.')
+async def on_member_leave(member):
+    print('Hello darkness my old friend.')
+    guild = member.guild
+    channel = get_general(guild)
+    await channel.send(f'{member.name} just left. He will be missed.')
 
 @bot.listen()
 async def on_member_ban(guild, user):
-    if not member.bot: 
-        channel = get_general(guild)
-        await channel.send(f'{user} just got banned from the {guild}.')
+    channel = get_general(guild)
+    await channel.send(f'{user} just got banned from the {guild}.')
 
 
 #ensures the command only works for the owner.
