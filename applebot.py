@@ -50,18 +50,17 @@ async def talk(ctx, *, msg):
     await ctx.message.delete()
     await ctx.send(msg)
 
-@bot.listen
+@bot.listen()
 async def on_message(message):
     if message.author == bot.user:
         return
 
-    cont = message.content
-    lcont = cont.lower()
-
-    if message.author == bot.owner_id:
-        await message.channel.send('YOU CANT TELL ME WHAT TO DO!! Wait... You can.')
-    if message.author != bot.owner:
-        await message.channel.send('NO! You meanie! /N{LOUDLY CRYING FACE}')
+    if 'shut up apple' in message.content.lower():
+        print('Whelp, getting shut upped')
+        if message.author.id == bot.owner_id:
+            await message.channel.send('YOU CANT TELL ME WHAT TO DO!! Wait... You can.')
+        else:
+            await message.channel.send('NO! You meanie! \N{LOUDLY CRYING FACE}')
 
 @bot.listen()
 async def on_message(message):
