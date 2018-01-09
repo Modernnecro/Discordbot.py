@@ -42,10 +42,6 @@ def get_general(guild):
     chan = utils.find(lambda c: c.name =='general', guild.channels)
     return chan if chan else guild.channels[0]
 
-@bot.command( )
-async def hello(ctx):
-    await ctx.send('Hello')
-
 @bot.command(usage='(your message here)' )
 async def talk(ctx, *, msg):
     """
@@ -54,8 +50,25 @@ async def talk(ctx, *, msg):
     await ctx.message.delete()
     await ctx.send(msg)
 
+@bot.listen
+async def on_message(message):
+    if message.author == bot.user:
+        return
+
+    cont = message.content
+    lcont = cont.lower()
+
+    if message.author == bot.owner_id:
+        await message.channel.send('YOU CANT TELL ME WHAT TO DO!! Wait... You can.')
+    if message.author != bot.owner:
+        await message.channel.send('NO! You meanie! /N{LOUDLY CRYING FACE}')
+
 @bot.listen()
 async def on_message(message):
+    if message.author == bot.user:
+        return
+
+
     cont = message.content
     lcont = cont.lower()
 
@@ -65,7 +78,7 @@ async def on_message(message):
     # Yeah... still haven't quite sussed the point of that one xD
     is_on_timeout = timeout_buckets > 0
 
-    if is_hello and not is_on_timeout:    
+    if is_hello and not is_on_timeout:
         response = random.choice(responses)
         await message.channel.send(response)
         add_bucket()
@@ -83,18 +96,18 @@ async def on_member_remove(member):
         print('Hello darkness my old friend.')
         guild = member.guild
         channel = get_general(guild)
-        await channel.send(f'{member.name} just left. He will be missed.')
+        await channel.send(f'{member.name} just left and will be missed.')
 
 @bot.listen()
 async def on_member_ban(guild, user):
-    if not member.bot: 
+    if not user.bot: 
         channel = get_general(guild)
         await channel.send(f'{user} just got banned from the {guild}.')
 
 
 #ensures the command only works for the owner.
 @commands.is_owner()
-@bot.command(aliases=['stop', 'shutdown', 'bedtime'])
+@bot.command(aliases=['kill', 'stop', 'shutdown', 'bedtime'])
 async def die(ctx):
     await ctx.bot.logout()
 
