@@ -55,6 +55,7 @@ async def talk(ctx, *, msg):
     await ctx.send(msg)
 
 @bot.command(usage='rolls a dice with a given value, or flips a coin.')
+@bot.command(aliases=['flip', 'dice', 'roll', 'choice', 'toss'])
 async def spin(ctx, *, num=None):
     """
     Rolls a dice of a given value. Defaults to flipping a coin if no value is given.
