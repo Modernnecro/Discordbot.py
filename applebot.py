@@ -38,6 +38,10 @@ def add_bucket():
     # waiting for it to finish
     asyncio.ensure_future(decrement())
 
+@bot.listen()
+async def on_ready():
+    print('Ready and connected')
+
 def get_general(guild):
     chan = utils.find(lambda c: c.name =='general', guild.channels)
     return chan if chan else guild.channels[0]
@@ -51,18 +55,19 @@ async def talk(ctx, *, msg):
     await ctx.send(msg)
 
 @bot.command(usage='Used to get a random number, either 1 or 2 OR from a list up to a given number')
-async def spin(ctx, *, num: int):
+async def spin(ctx, *, num=None):
     """
     A command that's there to make a decision based upon a number variable. Either give a number, or make the bot toss a "coin"
     """
+    if num is None:
+        num = 2
     if (num > 0):
+        print('number larger than 0')
         answer = random.randint(1, num)
-        ctx.send('You got ' + str(answer))
+        await ctx.send('You got ' + str(answer))
     elif (num <= 0):
-        ctx.send('You need to give a number higher than 0')
-    elif (num is None):
-        answer = random.randint(1, 2)
-        ctx.send('You got ' + str(answer))
+        print('number smaller or equal to zero')
+        await ctx.send('You need to give a number higher than 0')
 
 @bot.listen()
 async def on_message(message):
