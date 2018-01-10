@@ -66,7 +66,9 @@ async def spin(ctx, *, num=None):
         num = int(num)
         assert num > 1
     except ValueError:
-        await ctx.send('_Spins '+ str(num) + ' around._')
+        for character in ('~~', '`', '_', '*'):
+            num = num.replace(character, '')
+        await ctx.send(f'_Spins {num} around._')
     except AssertionError:
         await ctx.send('Please make the number bigger than 1.')
     else:
