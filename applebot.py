@@ -54,22 +54,25 @@ async def talk(ctx, *, msg):
     await ctx.message.delete()
     await ctx.send(msg)
 
-@bot.command(usage='Used to get a random number, either 1 or 2 OR from a list up to a given number')
+@bot.command(usage='rolls a dice with a given value, or flips a coin.')
 async def spin(ctx, *, num=None):
     """
-    A command that's there to make a decision based upon a number variable. Either give a number, or make the bot toss a "coin"
+    Rolls a dice of a given value. Defaults to flipping a coin if no value is given.
+    If the value is a string, it "spins around" the object, or string.
     """
     if num is None:
         num = 2
-    if (num > 0):
-        print('number larger than 0')
-        answer = random.randint(1, num)
-        await ctx.send('You got ' + str(answer))
-    elif (num <= 0):
-        print('number smaller or equal to zero')
-        await ctx.send('You need to give a number higher than 0')
-
+    try:
+        num = int(num)
+        assert num > 1
+    except ValueError:
+        await ctx.send('_Spins around_ ' + str(num))
+    except AssertionError:
+        await ctx.send('Please make the number bigger than 1.')
+    else:
+        await ctx.send(f'You got {random.randint(1, num)}')
 @bot.listen()
+
 async def on_message(message):
     if message.author == bot.user:
         return
