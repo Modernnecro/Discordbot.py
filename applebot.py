@@ -54,8 +54,7 @@ async def talk(ctx, *, msg):
     await ctx.message.delete()
     await ctx.send(msg)
 
-@bot.command(usage='rolls a dice with a given value, or flips a coin.')
-@bot.command(aliases=['flip', 'dice', 'roll', 'choice', 'toss'])
+@bot.command(usage='rolls a dice with a given value, or flips a coin.', aliases=['flip', 'dice', 'roll', 'choice', 'toss'])
 async def spin(ctx, *, num=None):
     """
     Rolls a dice of a given value. Defaults to flipping a coin if no value is given.
@@ -126,14 +125,18 @@ async def on_member_ban(guild, user):
         channel = get_general(guild)
         await channel.send(f'{user} just got banned from the {guild}.')
 
-
-#ensures the command only works for the owner.
-@commands.is_owner()
 @bot.command(aliases=['kill', 'stop', 'shutdown', 'bedtime'])
-async def die(ctx):
-    await ctx.bot.logout()
+async def die(message):
+    if message.author.id == bot.owner_id:
+        await message.channel.send('Okay, goodnight everyone! See you soon.')
+        await bot.logout()
+    else:
+        await message.channel.send('NOT LISTENING!! LALALALALALALA')
+
+
 
 with open('token.txt') as fp:
     token = fp.read().strip()
 
 bot.run(token)
+
