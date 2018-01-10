@@ -50,6 +50,20 @@ async def talk(ctx, *, msg):
     await ctx.message.delete()
     await ctx.send(msg)
 
+@bot.command(usage='Used to get a random number, either 1 or 2 OR from a list up to a given number')
+async def spin(ctx, *, num):
+    """
+    A command that's there to make a decision based upon a number variable. Either give a number, or make the bot toss a "coin"'
+    """
+    if (num > 0):
+        answer = random.choice(num)
+        message.channel.send('You got ' + answer)
+    elif (num <= 0):
+        message.channel.send('You need to give a number higher than 0')
+    elif (num is None):
+        answer = random.choice(2)
+        message.channel.send('You got ' + answer)
+
 @bot.listen()
 async def on_message(message):
     if message.author == bot.user:
