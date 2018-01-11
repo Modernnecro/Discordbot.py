@@ -2,7 +2,6 @@
 import logging
 import random
 import asyncio
-import requests
 
 import discord
 from discord.ext import commands
@@ -12,9 +11,6 @@ import discord.utils as utils
 logging.basicConfig(level='INFO')
 
 bot = commands.Bot(command_prefix='-', owner_id=182905629516496897)
-
-response = requests.get('https://status.discordapp.com/api/v2/summary.json')
-data = response.json()
 
 responses = ['Hiya!', 'Howdy', 'Howcha doin?']
 
@@ -39,8 +35,9 @@ def add_bucket():
     asyncio.ensure_future(decrement())
 
 @bot.listen()
-async def on_ready():
+async def on_ready(self):
     print('Ready and connected')
+    print(f'logged in as f{self.user.name} with id: f{self.user.id}')
 
 def get_general(guild):
     chan = utils.find(lambda c: c.name =='general', guild.channels)
@@ -141,4 +138,3 @@ with open('token.txt') as fp:
     token = fp.read().strip()
 
 bot.run(token)
-
