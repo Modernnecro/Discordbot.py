@@ -35,9 +35,8 @@ def add_bucket():
     asyncio.ensure_future(decrement())
 
 @bot.listen()
-async def on_ready(self):
+async def on_ready():
     print('Ready and connected')
-    print(f'logged in as f{self.user.name} with id: f{self.user.id}')
 
 def get_general(guild):
     chan = utils.find(lambda c: c.name =='general', guild.channels)
@@ -51,10 +50,42 @@ async def talk(ctx, *, msg):
     await ctx.message.delete()
     await ctx.send(msg)
 
+@bot.command(usage='rolls a set of dice like in a game (for instance Dungeons and Dragons) of a certain value.', aliases=['throw'])
+async def d(self, ctx, *args):
+    """
+    Rolls a number of dice of a given value. Default is a single D20.
+    If the value is a string, it mentions this to the one who rolled the dice.
+    """
+    sides = 20
+    n = 1
+    args = list(args)
+
+    while len(args) > 0:
+        flag = args.pop(0)
+        try:
+            if flag == '-sides' or flag == '-n':
+                option = args.pop(0)
+
+                if flag == '-n':
+                    n = int(option)
+                else:
+                    sides = int(option)
+            else:
+                return
+        except ValueError:
+            print(f'{option} must be an integer.')
+        except IndexError:
+            print(f'missing value {flag}')
+    results = []
+    for i in range (0,n):
+        results.append(str(random.randint(1,sides)))
+    await ctx.send(', '.join(results))
+
+
 @bot.command(usage='rolls a dice with a given value, or flips a coin.', aliases=['flip', 'dice', 'roll', 'choice', 'toss'])
 async def spin(ctx, *, num=None):
     """
-    Rolls a dice of a given value. Defaults to flipping a coin if no value is given.
+    Rolls a die of a given value. Defaults to flipping a coin if no value is given.
     If the value is a string, it "spins around" the object, or string.
     """
     if num is None:
