@@ -43,7 +43,7 @@ async def d(ctx, sides=6, times=1):
     results = [str(random.randint(1, sides)) for _ in range(0, times)]
     for ans in results:
         a = a + int(ans)
-    await ctx.send(', '.join(results) + '         The resulting score is: ' + str(a))
+    await ctx.send(f'{", ".join(results)}\nThe resulting score is: {a}.')
 
 @bot.listen()
 async def on_ready():
