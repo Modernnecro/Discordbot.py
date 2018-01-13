@@ -8,9 +8,28 @@ from discord.ext import commands
 
 import discord.utils as utils
 
+class Applebot(commands.Bot):
+    def __init__(self, *args, **kwargs):
+        self._game = None
+        self._status = discord.Status.online
+        super().__init__(*args, **kwargs)
+
+    async def change_status(self, **kwargs):
+        if 'game' not in kwargs:
+            kwargs['game'] = self._game
+        else:
+            self._game = kwargs['game']
+
+        if 'status' not in kwargs:
+            kwargs['status'] = self._status
+        else:
+            self._status = kwargs['status']
+
+        await super().change_presence(**kwargs)
+
 logging.basicConfig(level='INFO')
 
-bot = commands.Bot(command_prefix='-', owner_id=182905629516496897)
+bot = Applebot(command_prefix='-', owner_id=182905629516496897)
 
 responses = ['Hiya!', 'Howdy', 'Howcha doin?']
 
@@ -49,6 +68,27 @@ async def talk(ctx, *, msg):
     """
     await ctx.message.delete()
     await ctx.send(msg)
+
+@bot.command(usage='(game to play here)')
+async def game(ctx, *, msg):
+    """
+    A command that makes the bot "play" a game.
+    """
+    await bot.change_presence(game = discord.Game(name = msg))
+
+@bot.command()
+async def status(ctx, *, status_str):
+    available_statuses = {
+        'online': discord.Status.online,
+        'dnd': discord.Status.dnd,
+        'idle': discord.Status.idle,
+        'offline': discord.Status.invisible
+    }
+
+    if status_str not in available_statuses:
+        await ctx.send(f'Valid statuses are: {", ".join(available_statuses.keys())}')
+    else:
+        await bot.change_presence(status=available_statuses[status_str])
 
 @bot.command(usage='rolls a set of dice like in a game (for instance Dungeons and Dragons) of a certain value.', aliases=['throw'])
 async def d(self, ctx, *args):
@@ -101,8 +141,8 @@ async def spin(ctx, *, num=None):
         await ctx.send('Please make the number bigger than 1.')
     else:
         await ctx.send(f'You got {random.randint(1, num)}')
-@bot.listen()
 
+@bot.listen()
 async def on_message(message):
     if message.author == bot.user:
         return
@@ -111,6 +151,7 @@ async def on_message(message):
         print('Whelp, getting shut upped')
         if message.author.id == bot.owner_id:
             await message.channel.send('YOU CANT TELL ME WHAT TO DO!! Wait... You can.')
+            await message.send(message.author, 'Restarting in \n3, \n2, \n1, \n...')
         else:
             await message.channel.send('NO! You meanie! \N{LOUDLY CRYING FACE}')
 
@@ -118,7 +159,6 @@ async def on_message(message):
 async def on_message(message):
     if message.author == bot.user:
         return
-
 
     cont = message.content
     lcont = cont.lower()
