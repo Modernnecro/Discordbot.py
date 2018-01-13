@@ -53,6 +53,17 @@ def add_bucket():
     # waiting for it to finish
     asyncio.ensure_future(decrement())
 
+@bot.command(usage='x y (both are numbers)')
+async def d(ctx, sides=6, times=1):
+    """
+    Makes the bot roll a dice of x sides y times
+    """
+    a = 0
+    results = [str(random.randint(1, sides)) for _ in range(0, times)]
+    for ans in results:
+        a = a + int(ans)
+    await ctx.send(f'{", ".join(results)}\nThe resulting score is: {a}.')
+
 @bot.listen()
 async def on_ready():
     print('Ready and connected')
@@ -69,6 +80,7 @@ async def talk(ctx, *, msg):
     await ctx.message.delete()
     await ctx.send(msg)
 
+<<<<<<< HEAD
 @bot.command(usage='(game to play here)')
 async def game(ctx, *, msg):
     """
@@ -123,6 +135,12 @@ async def d(self, ctx, *args):
 
 
 @bot.command(usage='rolls a dice with a given value, or flips a coin.', aliases=['flip', 'dice', 'roll', 'choice', 'toss'])
+=======
+
+
+
+@bot.command(usage='number or text', aliases=['flip', 'dice', 'roll', 'choice', 'toss'])
+>>>>>>> de9190975cf96f23082f3f8b3a7f19b4636aa8a1
 async def spin(ctx, *, num=None):
     """
     Rolls a die of a given value. Defaults to flipping a coin if no value is given.
