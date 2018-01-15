@@ -2,11 +2,15 @@
 import logging
 import random
 import asyncio
+import re
 
 import discord
 from discord.ext import commands
 
 import discord.utils as utils
+
+def starts_with_word(string, word, case_insensitive=True):
+    return re.match(r'^%s\b' % word, string, re.I if case_insensitive else 0)
 
 class Applebot(commands.Bot):
     def __init__(self, *args, **kwargs):
@@ -14,7 +18,7 @@ class Applebot(commands.Bot):
         self._status = discord.Status.online
         super().__init__(*args, **kwargs)
 
-    async def change_status(self, **kwargs):
+    async def change_presence(self, **kwargs):
         if 'game' not in kwargs:
             kwargs['game'] = self._game
         else:
@@ -142,13 +146,14 @@ async def on_message(message):
     lcont = cont.lower()
 
     # random.random() returns a number in the range [0, 1].
-    is_hello = any(message.content.lower().startswith(t) for t in triggers)
+    is_hello = any(starts_with_word(message.content, word) for word in triggers)
+    print(is_hello)
     # To access global scope, we don't have to add the global line.
     # Yeah... still haven't quite sussed the point of that one xD
     is_on_timeout = timeout_buckets > 0
 
     if is_hello and not is_on_timeout:
-        if random.randomint(1, 10) == 5
+        if random.randint(1, 10) == 5:
             response = random.choice(responses)
             await message.channel.send(response)
             add_bucket()
