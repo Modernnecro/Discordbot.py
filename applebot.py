@@ -130,7 +130,6 @@ async def on_message(message):
         print('Whelp, getting shut upped')
         if message.author.id == bot.owner_id:
             await message.channel.send('YOU CANT TELL ME WHAT TO DO!! Wait... You can.')
-            await message.send(message.author, 'Restarting in \n3, \n2, \n1, \n...')
         else:
             await message.channel.send('NO! You meanie! \N{LOUDLY CRYING FACE}')
 
@@ -149,9 +148,10 @@ async def on_message(message):
     is_on_timeout = timeout_buckets > 0
 
     if is_hello and not is_on_timeout:
-        response = random.choice(responses)
-        await message.channel.send(response)
-        add_bucket()
+        if random.randomint(1, 10) == 5
+            response = random.choice(responses)
+            await message.channel.send(response)
+            add_bucket()
 
 @bot.listen()
 async def on_member_join(member):
