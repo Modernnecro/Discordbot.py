@@ -36,7 +36,6 @@ logging.basicConfig(level='INFO')
 bot = Applebot(command_prefix='-', owner_id=182905629516496897)
 
 responses = ['Hiya!', 'Howdy', 'Howcha doin?']
-
 triggers = ['hello', 'hi', 'hiya',  'waves']
 
 timeout_buckets = 0
@@ -83,6 +82,31 @@ async def talk(ctx, *, msg):
     """
     await ctx.message.delete()
     await ctx.send(msg)
+
+@bot.command()
+async def dominate(ctx):
+    await ctx.send('Trying to take over the world in 3... 2... 1...')
+
+ @bot.command(usage='')
+async def embed(ctx):
+    # Each of these parameters can be left out if you don't want it.
+    embed = discord.Embed(
+        title='Discord embed title',
+        description='This is the first block of text',
+        color=0xff00ff,   # hex
+        url='http://iloveyoulikeafatladylovesappl.es'
+    )
+
+     # Adding fields
+    embed.add_field(
+        name='Title of the field',
+        value='Body of the field'
+    )
+
+     # Sending it in a command
+    await ctx.send(embed=embed)
+    # Sending it in an on_message event
+    # await message.channel.send(embed=embed)
 
 @bot.command(usage='(game to play here)')
 async def game(ctx, *, msg):
