@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.6
+ #!/usr/bin/env python3.6
 import logging
 import random
 import asyncio
@@ -36,7 +36,6 @@ logging.basicConfig(level='INFO')
 bot = Applebot(command_prefix='-', owner_id=182905629516496897)
 
 responses = ['Hiya!', 'Howdy', 'Howcha doin?']
-
 triggers = ['hello', 'hi', 'hiya',  'waves']
 
 timeout_buckets = 0
@@ -79,10 +78,35 @@ def get_general(guild):
 @bot.command(usage='(your message here)' )
 async def talk(ctx, *, msg):
     """
-    A simple command that makes the bot leave out the command and repeat all the text it receives.
+    A simple command that makes the bot leave out the command and repeat all th$
     """
     await ctx.message.delete()
     await ctx.send(msg)
+
+@bot.command()
+async def dominate(ctx):
+    await ctx.send('Trying to take over the world in 3... 2... 1...')
+
+@bot.command(usage='')
+async def embed(ctx):
+    # Each of these parameters can be left out if you don't want it.
+    embed = discord.Embed(
+        title='Discord embed title',
+        description='This is the first block of text',
+        color=0xff00ff,   # hex
+        url='http://iloveyoulikeafatladylovesappl.es'
+    )
+
+    # Adding fields
+    embed.add_field(
+        name='Title of the field',
+        value='Body of the field'
+    )
+
+    # Sending it in a command
+    await ctx.send(embed=embed)
+    # Sending it in an on_message event
+    # await message.channel.send(embed=embed)
 
 @bot.command(usage='(game to play here)')
 async def game(ctx, *, msg):
@@ -101,14 +125,14 @@ async def status(ctx, *, status_str):
     }
 
     if status_str not in available_statuses:
-        await ctx.send(f'Valid statuses are: {", ".join(available_statuses.keys())}')
+        await ctx.send(f'Valid statuses are: {", ".join(available_statuses.keys$
     else:
         await bot.change_presence(status=available_statuses[status_str])
 
-@bot.command(usage='(number or text)', aliases=['flip', 'dice', 'roll', 'choice', 'toss'])
+@bot.command(usage='(number or text)', aliases=['flip', 'dice', 'roll', 'choice$
 async def spin(ctx, *, num=None):
     """
-    Rolls a die of a given value. Defaults to flipping a coin if no value is given.
+    Rolls a die of a given value. Defaults to flipping a coin if no value is gi$
     If the value is a string, it "spins around" the object, or string.
     """
     if num is None:
@@ -133,7 +157,7 @@ async def on_message(message):
     if 'shut up apple' in message.content.lower():
         print('Whelp, getting shut upped')
         if message.author.id == bot.owner_id:
-            await message.channel.send('YOU CANT TELL ME WHAT TO DO!! Wait... You can.')
+            await message.channel.send('YOU CANT TELL ME WHAT TO DO!! Wait... Y$
         else:
             await message.channel.send('NO! You meanie! \N{LOUDLY CRYING FACE}')
 
@@ -163,7 +187,7 @@ async def on_member_join(member):
     if not member.bot:
         guild = member.guild
         channel = get_general(guild)
-        await channel.send(f'Welcome to {guild.name}, {member.name}!, please read the rules first.')
+        await channel.send(f'Welcome to {guild.name}, {member.name}!, please re$
 
 @bot.listen()
 async def on_member_remove(member):
@@ -175,11 +199,11 @@ async def on_member_remove(member):
 
 @bot.listen()
 async def on_member_ban(guild, user):
-    if not user.bot: 
+    if not user.bot:
         channel = get_general(guild)
         await channel.send(f'{user} just got banned from the {guild}.')
 
-@bot.command(aliases=['kill', 'stop', 'shutdown', 'bedtime'])
+@bot.command(aliases=['kill', 'stp', 'shutdown', 'bedtime'])
 async def die(message):
     if message.author.id == bot.owner_id:
         await message.channel.send('Okay, goodnight everyone! See you soon.')
